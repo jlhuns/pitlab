@@ -499,6 +499,7 @@ def test_metrics_handle_very_long_series() -> None:
     assert math.isfinite(profit_factor(returns))
     assert -1.0 <= max_drawdown(returns).value <= 0.0
 
+
 def test_non_sharpe_metrics_handle_single_observation() -> None:
     returns = [0.10]
 
@@ -514,6 +515,7 @@ def test_non_sharpe_metrics_handle_single_observation() -> None:
 
     with pytest.warns(UserWarning):
         assert math.isnan(calmar(returns))
+
 
 def test_metrics_accept_mixed_integer_and_float_returns() -> None:
     returns = [1, -0.5, 0, 0.25]

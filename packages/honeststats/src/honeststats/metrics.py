@@ -1,13 +1,12 @@
-
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Literal, Sequence
 import warnings
+from collections.abc import Sequence
+from dataclasses import dataclass
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
-
 
 ReturnsLike = Sequence[float] | npt.NDArray[np.floating]
 NanPolicy = Literal["raise", "omit"]
@@ -40,6 +39,7 @@ class Summary:
 # ---------------------------------------------------------------------
 # Validation and preparation
 # ---------------------------------------------------------------------
+
 
 def _prepare_returns(
     r: ReturnsLike,
@@ -101,6 +101,7 @@ def _validate_periods(periods_per_year: float) -> None:
 # the input again, which lets summary() prepare the data only once.
 # ---------------------------------------------------------------------
 
+
 def _annualize_ratio(
     numerator: float,
     denominator: float,
@@ -115,18 +116,14 @@ def _annualize_ratio(
         )
         return float("nan")
 
-    return float(
-        (numerator / denominator) * np.sqrt(periods_per_year)
-    )
+    return float((numerator / denominator) * np.sqrt(periods_per_year))
 
 
 def _cumulative_returns(
     returns: npt.NDArray[np.float64],
 ) -> npt.NDArray[np.float64]:
     """Build an equity curve beginning at 1.0."""
-    return np.concatenate(
-        ([1.0], np.cumprod(1.0 + returns))
-    )
+    return np.concatenate(([1.0], np.cumprod(1.0 + returns)))
 
 
 def _sharpe_clean(
@@ -158,9 +155,7 @@ def _sortino_clean(
     excess_returns = returns - target
     downside_returns = np.minimum(excess_returns, 0.0)
 
-    downside_deviation = float(
-        np.sqrt(np.mean(downside_returns**2))
-    )
+    downside_deviation = float(np.sqrt(np.mean(downside_returns**2)))
 
     mean_excess = float(np.mean(excess_returns))
 
@@ -200,15 +195,9 @@ def _max_drawdown_clean(
     start = int(np.argmax(equity[: trough + 1]))
     peak_value = float(equity[start])
 
-    recovery_candidates = np.flatnonzero(
-        equity[trough + 1 :] >= peak_value
-    )
+    recovery_candidates = np.flatnonzero(equity[trough + 1 :] >= peak_value)
 
-    recovery = (
-        int(trough + 1 + recovery_candidates[0])
-        if recovery_candidates.size
-        else None
-    )
+    recovery = int(trough + 1 + recovery_candidates[0]) if recovery_candidates.size else None
 
     return Drawdown(
         value=value,
@@ -279,6 +268,7 @@ def _profit_factor_clean(
 # Each public function prepares its own input. summary() bypasses
 # these wrappers and calls the shared calculation helpers directly.
 # ---------------------------------------------------------------------
+
 
 def sharpe(
     r: ReturnsLike,
@@ -370,6 +360,7 @@ def profit_factor(
 # ---------------------------------------------------------------------
 # Combined summary
 # ---------------------------------------------------------------------
+
 
 def summary(
     r: ReturnsLike,
