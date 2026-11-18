@@ -6,7 +6,7 @@ cleanup and a release. The weekly automation reads this file to pick the next
 challenge, so keep the format: `- [ ] Week NN · package · title — detail`.
 
 ## Phase 1 · `honeststats` (honest statistics)
-- [ ] Week 01 · honeststats · Core performance metrics — sharpe, sortino, max_drawdown (with start/trough/recovery), cagr, calmar, hit_rate, profit_factor; strict edge-case rules; property tests
+- [x] Week 01 · honeststats · Core performance metrics — sharpe, sortino, max_drawdown (with start/trough/recovery), cagr, calmar, hit_rate, profit_factor; strict edge-case rules; property tests
 - [ ] Week 02 · honeststats · Bootstrap confidence intervals — stationary block bootstrap (Politis-Romano) for any metric; reproducible seeds; CI coverage test on synthetic data
 - [ ] Week 03 · honeststats · Walk-forward harness — rolling and anchored train/test splits with purging and an embargo; a fit/score strategy protocol
 - [ ] Week 04 · honeststats · Release week — docs site or rich README, examples, changelog, publish v0.1.0 to PyPI via trusted publishing
