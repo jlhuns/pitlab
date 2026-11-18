@@ -1,0 +1,40 @@
+[project]
+name = "pitlab-workspace"
+version = "0.0.0"
+description = "Workspace root for pitlab: the backtesting stack that can't lie."
+requires-python = ">=3.11"
+dependencies = ["honeststats"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "hypothesis>=6",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+honeststats = { workspace = true }
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "NPY", "RUF"]
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+packages = ["honeststats"]
+
+[tool.pytest.ini_options]
+testpaths = ["packages"]
+addopts = "-ra --strict-markers"
+filterwarnings = ["error::DeprecationWarning"]
