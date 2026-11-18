@@ -487,3 +487,45 @@ def test_summary_propagates_validation_errors() -> None:
     assert summary is not None
     with pytest.raises(ValueError):
         summary([])
+
+
+def test_metrics_handle_very_long_series() -> None:
+    returns = [0.0001, -0.00005] * 50_000
+
+    assert math.isfinite(sharpe(returns))
+    assert math.isfinite(sortino(returns))
+    assert math.isfinite(cagr(returns))
+    assert math.isfinite(hit_rate(returns))
+    assert math.isfinite(profit_factor(returns))
+    assert -1.0 <= max_drawdown(returns).value <= 0.0
+
+def test_non_sharpe_metrics_handle_single_observation() -> None:
+    returns = [0.10]
+
+    assert cagr(returns) == pytest.approx(1.10**252 - 1)
+    assert hit_rate(returns) == pytest.approx(1.0)
+    assert profit_factor(returns) == math.inf
+
+    dd = max_drawdown(returns)
+    assert as_tuple(dd) == (0.0, 0, 0, 0)
+
+    with pytest.warns(UserWarning):
+        assert math.isnan(sortino(returns))
+
+    with pytest.warns(UserWarning):
+        assert math.isnan(calmar(returns))
+
+def test_metrics_accept_mixed_integer_and_float_returns() -> None:
+    returns = [1, -0.5, 0, 0.25]
+
+    assert hit_rate(returns) == pytest.approx(0.5)
+    assert profit_factor(returns) == pytest.approx(2.5)
+
+    dd = max_drawdown(returns)
+    assert dd.value == pytest.approx(-0.5)
+    assert dd.start == 1
+    assert dd.trough == 2
+    assert dd.recovery is None
+
+    expected_cagr = (2.0 * 0.5 * 1.0 * 1.25) ** (252 / 4) - 1
+    assert cagr(returns) == pytest.approx(expected_cagr)
