@@ -80,22 +80,29 @@ import numpy.typing as npt
 ReturnsLike: TypeAlias = Sequence[float] | npt.NDArray[np.floating]
 NanPolicy = Literal["raise", "omit"]
 
+
 @dataclass(frozen=True)
 class Drawdown:
-    value: float          # <= 0, e.g. -0.28 for a 28% drawdown
-    start: int            # curve index of the peak
-    trough: int           # curve index of the lowest point
+    value: float  # <= 0, e.g. -0.28 for a 28% drawdown
+    start: int  # curve index of the peak
+    trough: int  # curve index of the lowest point
     recovery: int | None  # curve index where the peak was regained, else None
 
-def sharpe(r: ReturnsLike, rf: float = 0.0, periods_per_year: int = 252,
-           nan_policy: NanPolicy = "raise") -> float: ...
-def sortino(r: ReturnsLike, target: float = 0.0, periods_per_year: int = 252,
-            nan_policy: NanPolicy = "raise") -> float: ...
+
+def sharpe(
+    r: ReturnsLike, rf: float = 0.0, periods_per_year: int = 252, nan_policy: NanPolicy = "raise"
+) -> float: ...
+def sortino(
+    r: ReturnsLike,
+    target: float = 0.0,
+    periods_per_year: int = 252,
+    nan_policy: NanPolicy = "raise",
+) -> float: ...
 def max_drawdown(r: ReturnsLike, nan_policy: NanPolicy = "raise") -> Drawdown: ...
-def cagr(r: ReturnsLike, periods_per_year: int = 252,
-         nan_policy: NanPolicy = "raise") -> float: ...
-def calmar(r: ReturnsLike, periods_per_year: int = 252,
-           nan_policy: NanPolicy = "raise") -> float: ...
+def cagr(r: ReturnsLike, periods_per_year: int = 252, nan_policy: NanPolicy = "raise") -> float: ...
+def calmar(
+    r: ReturnsLike, periods_per_year: int = 252, nan_policy: NanPolicy = "raise"
+) -> float: ...
 def hit_rate(r: ReturnsLike, nan_policy: NanPolicy = "raise") -> float: ...
 def profit_factor(r: ReturnsLike, nan_policy: NanPolicy = "raise") -> float: ...
 ```
